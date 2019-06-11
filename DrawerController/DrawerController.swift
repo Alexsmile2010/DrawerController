@@ -76,7 +76,7 @@ private func bounceKeyFrameAnimation(forDistance distance: CGFloat, on view: UIV
   let animation = CAKeyframeAnimation(keyPath: "position.x")
   animation.repeatCount = 1
   animation.duration = 0.8
-  animation.fillMode = CAMediaTimingFillMode.forwards
+  animation.fillMode = kCAFillModeForwards
   animation.values = values
   animation.isRemovedOnCompletion = true
   animation.autoreverses = false
@@ -543,11 +543,11 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
 
   // MARK: - UIViewController Containment
 
-  override open var childForStatusBarHidden : UIViewController? {
+    override open var childViewControllerForStatusBarHidden : UIViewController? {
     return self.childViewController(for: self.openSide)
   }
 
-  override open var childForStatusBarStyle : UIViewController? {
+    override open var childViewControllerForStatusBarStyle : UIViewController? {
     return self.childViewController(for: self.openSide)
   }
 
@@ -704,7 +704,7 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     if let sideDrawerViewControllerToHide = self.sideDrawerViewController(for: drawerToHide) {
-      self.childControllerContainerView.sendSubviewToBack(sideDrawerViewControllerToHide.view)
+        self.childControllerContainerView.sendSubview(toBack: sideDrawerViewControllerToHide.view)
       sideDrawerViewControllerToHide.view.isHidden = true
     }
 
@@ -844,8 +844,8 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
       currentSideViewController!.beginAppearanceTransition(false, animated: false)
       currentSideViewController!.view.removeFromSuperview()
       currentSideViewController!.endAppearanceTransition()
-      currentSideViewController!.willMove(toParent: nil)
-      currentSideViewController!.removeFromParent()
+        currentSideViewController!.willMove(toParentViewController: nil)
+        currentSideViewController!.removeFromParentViewController()
     }
 
     var autoResizingMask = UIView.AutoresizingMask()
@@ -859,7 +859,7 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     if viewController != nil {
-      self.addChild(viewController!)
+        self.addChildViewController(viewController!)
 
       if (self.openSide == drawerSide) && (self.childControllerContainerView.subviews as NSArray).contains(self.centerContainerView) {
         self.childControllerContainerView.insertSubview(viewController!.view, belowSubview: self.centerContainerView)
@@ -867,11 +867,11 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
         viewController!.endAppearanceTransition()
       } else {
         self.childControllerContainerView.addSubview(viewController!.view)
-        self.childControllerContainerView.sendSubviewToBack(viewController!.view)
+        self.childControllerContainerView.sendSubview(toBack: viewController!.view)
         viewController!.view.isHidden = true
       }
 
-      viewController!.didMove(toParent: self)
+        viewController!.didMove(toParentViewController: self)
       viewController!.view.autoresizingMask = autoResizingMask
       viewController!.view.frame = viewController!.evo_visibleDrawerFrame
     }
@@ -885,13 +885,13 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
     }
 
     if let oldCenterViewController = self._centerViewController {
-      oldCenterViewController.willMove(toParent: nil)
+        oldCenterViewController.willMove(toParentViewController: nil)
 
       if animated == false {
         oldCenterViewController.beginAppearanceTransition(false, animated: false)
       }
 
-      oldCenterViewController.removeFromParent()
+        oldCenterViewController.removeFromParentViewController()
       oldCenterViewController.view.removeFromSuperview()
 
       if animated == false {
@@ -902,10 +902,10 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
     self._centerViewController = centerViewController
 
     if self._centerViewController != nil {
-      self.addChild(self._centerViewController!)
+        self.addChildViewController(self._centerViewController!)
       self._centerViewController!.view.frame = self.childControllerContainerView.bounds
       self.centerContainerView.addSubview(self._centerViewController!.view)
-      self.childControllerContainerView.bringSubviewToFront(self.centerContainerView)
+        self.childControllerContainerView.bringSubview(toFront: self.centerContainerView)
       self._centerViewController!.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
       self.updateShadowForCenterView()
 
@@ -916,7 +916,7 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
           self._centerViewController!.endAppearanceTransition()
         }
 
-        self._centerViewController!.didMove(toParent: self)
+        self._centerViewController!.didMove(toParentViewController: self)
       }
     }
   }
@@ -952,7 +952,7 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
       self.closeDrawer(animated: animated, completion: { (finished) in
         if forwardAppearanceMethodsToCenterViewController {
           self.centerViewController!.endAppearanceTransition()
-          self.centerViewController!.didMove(toParent: self)
+            self.centerViewController!.didMove(toParentViewController: self)
         }
 
         completion?(finished)
@@ -1022,7 +1022,7 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
         }, completion: { (finished) -> Void in
           if forwardAppearanceMethodsToCenterViewController {
             self.centerViewController?.endAppearanceTransition()
-            self.centerViewController?.didMove(toParent: self)
+            self.centerViewController?.didMove(toParentViewController: self)
           }
 
           sideDrawerViewController?.endAppearanceTransition()
@@ -1445,7 +1445,7 @@ open class DrawerController: UIViewController, UIGestureRecognizerDelegate {
         if oldShadowPath != nil {
           let transition = CABasicAnimation(keyPath: "shadowPath")
           transition.fromValue = oldShadowPath
-          transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+          transition.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
           transition.duration = context.transitionDuration
           self.centerContainerView.layer.add(transition, forKey: "transition")
         }
